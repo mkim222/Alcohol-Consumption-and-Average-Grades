@@ -2,29 +2,75 @@
 title: "Alcohol consumption and average grades"
 author: "Minsoo KIm and Daemo Guo"
 date: '2022-07-16'
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+# install packages
+install.packages("googleVis")
+install.packages("tidyverse")
+install.packages("DT")
+install.packages("flextable")
+install.packages("ggplot2")
+install.packages("gganimate")
+install.packages("gapminder")
+install.packages("maptools")
+install.packages("plotly")
+install.packages("leaflet")
+# install klippy for copy-to-clipboard button in code chunks
+install.packages("remotes")
+remotes::install_github("rlesur/klippy")
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+# set options
+options(stringsAsFactors = F)          # no automatic data transformation
+options("scipen" = 100, "digits" = 12) # suppress math annotation
+# Warning: the following option adaptation requires re-setting during session outro!
+op <- options(gvis.plot.tag='chart')  # set gViz options
+# activate packages
+library(googleVis)
+library(tidyverse)
+library(DT)
+library(flextable)
+library(ggplot2)
+library(gganimate)
+library(gapminder)
+library(maptools)
+library(plotly)
+library(leaflet)
+# activate klippy for copy-to-clipboard button
+klippy::klippy()
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+library(readr)
+student_mat <- read_csv("student-mat.csv")
+View(student_mat)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+student_mat_revised <- student_mat %>%
+  select(school, sex, age, studytime, failures, Dalc, Walc, absences, G3)
+```
+
+```{r}
+student_mat_revised_2 <- student_mat_revised %>% 
+  rename(
+    weekdayalc = "Dalc",
+    weekendalc = "Walc",
+    finalgrade = "G3"
+  )
+```
+
+```{r}
+library(plotly)
+plot_ly(student_mat_revised_2, x = ~school, color = ~school)
+```
+
+```{r}
+plot_ly(student_mat_revised_2, x = ~sex, color = ~sex)
+```
+
