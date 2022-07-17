@@ -8,44 +8,6 @@ output:
 ---
 
 ```{r}
-# install packages
-install.packages("googleVis")
-install.packages("tidyverse")
-install.packages("DT")
-install.packages("flextable")
-install.packages("ggplot2")
-install.packages("gganimate")
-install.packages("gapminder")
-install.packages("maptools")
-install.packages("plotly")
-install.packages("leaflet")
-# install klippy for copy-to-clipboard button in code chunks
-install.packages("remotes")
-remotes::install_github("rlesur/klippy")
-```
-
-```{r}
-# set options
-options(stringsAsFactors = F)          # no automatic data transformation
-options("scipen" = 100, "digits" = 12) # suppress math annotation
-# Warning: the following option adaptation requires re-setting during session outro!
-op <- options(gvis.plot.tag='chart')  # set gViz options
-# activate packages
-library(googleVis)
-library(tidyverse)
-library(DT)
-library(flextable)
-library(ggplot2)
-library(gganimate)
-library(gapminder)
-library(maptools)
-library(plotly)
-library(leaflet)
-# activate klippy for copy-to-clipboard button
-klippy::klippy()
-```
-
-```{r}
 library(readr)
 student_mat <- read_csv("student-mat.csv")
 View(student_mat)
@@ -68,27 +30,86 @@ student_mat_revised_2 <- student_mat_revised %>%
 ```{r}
 student_mat_revised_3 <- student_mat_revised_2 %>% 
 mutate(alcohol = weekdayalc + weekendalc) %>% 
-  select(-weekdayalc, -weekendalc)
+  select(-weekdayalc, -weekendalc) %>% 
+  filter(school == "GP")
 ```
+
+```{r}
+student_mat_revised_3 %>% 
+  ggplot() +
+  geom_bar(mapping = aes(x = sex, fill = sex))
+```
+
 
 ```{r}
 library(plotly)
-library(tidyverse)
-library(dplyr)
-  layout(
-  title = "alcohol vs grade",
-  xaxis = list(title = "alcohol"),
-  yaxis = list(title = "grade"))
+fig <- student_mat_revised_3 %>% 
+  ggplot() +
+  geom_bar(mapping = aes(x = sex, fill = sex))
+
+ggplotly(fig)
 ```
 
 ```{r}
-fig <- student_mat_revised_3 %>% 
-  plot_ly(x = ~alcohol, y = ~grade, type = "histogram",
-          hoverinfo = "text",
-          text = paste("Alcohol consumption a week:", student_mat_revised_3$alcohol,
-                       "<br>",
-                       "Final grade:", student_mat_revised_3$grade))
-
-fig
+a <- student_mat_revised_3 %>% 
+  ggplot() +
+  geom_smooth(mapping = aes(x = alcohol, y = grade), method = lm, se = FALSE, col = "blue", size = 3) +
+  
+  labs(
+    title = "relationship",
+    x = "alcohol",
+    y = "grade"
+  )
+ggplotly(a)
 ```
+
+```{r}
+b <- student_mat_revised_3 %>% 
+  ggplot() +
+  geom_smooth(mapping = aes(x = alcohol, y = absences), method = lm, se = FALSE, col = "blue", size = 3) +
+  
+  labs(
+    title = "relationship",
+    x = "alcohol",
+    y = "absences"
+  )
+ggplotly(b)
+```
+
+```{r}
+c <- student_mat_revised_3 %>% 
+  ggplot() +
+  geom_smooth(mapping = aes(x = alcohol, y = studytime), method = lm, se = FALSE, col = "blue", size = 3) +
+  
+  labs(
+    title = "relationship",
+    x = "alcohol",
+    y = "absences"
+  )
+ggplotly(c)
+```
+
+```{r}
+d <- student_mat_revised_3 %>% 
+  ggplot() +
+  geom_smooth(mapping = aes(x = alcohol, y = failures), method = lm, se = FALSE, col = "blue", size = 3) +
+  labs(
+    title = "relationship",
+    x = "alcohol",
+    y = "failures"
+  )
+ggplotly(d)
+```
+
+```{r}
+library(gganimate)
+library(ggplot2)
+library(dplyr)
+library(ggthemes)
+library(tidyr)
+library(zoo)
+```
+
+
+
 
