@@ -74,20 +74,20 @@ mutate(alcohol = weekdayalc + weekendalc) %>%
 ```{r}
 library(plotly)
 library(tidyverse)
+library(dplyr)
+  layout(
+  title = "alcohol vs grade",
+  xaxis = list(title = "alcohol"),
+  yaxis = list(title = "grade"))
 ```
 
 ```{r}
 fig <- student_mat_revised_3 %>% 
-  plot_ly(x = ~alcohol, y = ~grade, type = "scatter", mode = "markers",
+  plot_ly(x = ~alcohol, y = ~grade, type = "histogram",
           hoverinfo = "text",
           text = paste("Alcohol consumption a week:", student_mat_revised_3$alcohol,
                        "<br>",
-                       "Final grade:", student_mat_revised_3$grade))+
-          
-layout(
-  title = "alcohol vs grade",
-  xaxis = list(title = "alcohol"),
-  yaxis = list(title = "grade"))
+                       "Final grade:", student_mat_revised_3$grade))
 
 fig
 ```
