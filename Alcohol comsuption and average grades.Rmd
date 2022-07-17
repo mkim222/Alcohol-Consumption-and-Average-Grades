@@ -61,16 +61,34 @@ student_mat_revised_2 <- student_mat_revised %>%
   rename(
     weekdayalc = "Dalc",
     weekendalc = "Walc",
-    finalgrade = "G3"
+    grade = "G3",
   )
 ```
 
 ```{r}
-library(plotly)
-plot_ly(student_mat_revised_2, x = ~school, color = ~school)
+student_mat_revised_3 <- student_mat_revised_2 %>% 
+mutate(alcohol = weekdayalc + weekendalc) %>% 
+  select(-weekdayalc, -weekendalc)
 ```
 
 ```{r}
-plot_ly(student_mat_revised_2, x = ~sex, color = ~sex)
+library(plotly)
+library(tidyverse)
+```
+
+```{r}
+fig <- student_mat_revised_3 %>% 
+  plot_ly(x = ~alcohol, y = ~grade, type = "scatter", mode = "markers",
+          hoverinfo = "text",
+          text = paste("Alcohol consumption a week:", student_mat_revised_3$alcohol,
+                       "<br>",
+                       "Final grade:", student_mat_revised_3$grade))+
+          
+layout(
+  title = "alcohol vs grade",
+  xaxis = list(title = "alcohol"),
+  yaxis = list(title = "grade"))
+
+fig
 ```
 
