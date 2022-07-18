@@ -14,6 +14,7 @@ View(student_mat)
 ```
 
 ```{r}
+library(dplyr)
 student_mat_revised <- student_mat %>%
   select(school, sex, age, studytime, failures, Dalc, Walc, absences, G3)
 ```
