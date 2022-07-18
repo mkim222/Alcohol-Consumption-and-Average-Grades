@@ -20,14 +20,14 @@ library(tidyverse)
 ```{r}
 library(readr)
 student_mat <- read_csv("student-mat.csv")
-View(student_mat)
+view(student_mat)
 ```
 
 ```{r}
 library(dplyr)
 student_mat_revised <- student_mat %>%
   select(school, sex, age, studytime, failures, Dalc, Walc, absences, G3)
-  View(student_mat_revised)
+  view(student_mat_revised)
 ```
 
 ```{r}
@@ -35,25 +35,25 @@ student_mat_revised_2 <- student_mat_revised %>%
   rename(grade = "G3",
          weekdayalc = "Dalc",
          weekendalc = "Walc")
-  View(student_mat_revised_2)
+  view(student_mat_revised_2)
 ```
 
 ```{r}
 student_mat_revised_3 <- student_mat_revised_2 %>% 
   mutate(alcohol = weekdayalc + weekendalc)
-  View(student_mat_revised_3)
+  view(student_mat_revised_3)
 ```
 
 ```{r}
 student_mat_revised_4 <- student_mat_revised_3 %>% 
   filter(school == "GP")
-  View(student_mat_revised_4)
+  view(student_mat_revised_4)
 ```
 
 ```{r}
 student_mat_revised_5 <- student_mat_revised_4 %>% 
   select(-weekdayalc, -weekendalc)
-  View(student_mat_revised_5)
+  view(student_mat_revised_5)
 ```
 
 ```{r}
