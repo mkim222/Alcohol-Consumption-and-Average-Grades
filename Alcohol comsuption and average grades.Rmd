@@ -1,6 +1,6 @@
 ---
 title: "Alcohol consumption and average grades"
-author: "Minsoo KIm and Daemo Guo"
+author: "Minsoo KIm"
 date: '2022-07-16'
 output:
   html_document: default
@@ -11,6 +11,9 @@ output:
 library(ggplot2)
 library(plotly)
 library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(tidyverse)
 ```
 
 
@@ -24,90 +27,61 @@ View(student_mat)
 library(dplyr)
 student_mat_revised <- student_mat %>%
   select(school, sex, age, studytime, failures, Dalc, Walc, absences, G3)
+  View(student_mat_revised)
 ```
 
 ```{r}
 student_mat_revised_2 <- student_mat_revised %>% 
-  rename(
-    weekdayalc = "Dalc",
-    weekendalc = "Walc",
-    grade = "G3",
-  )
+  rename(grade = "G3",
+         weekdayalc = "Dalc",
+         weekendalc = "Walc")
+  View(student_mat_revised_2)
 ```
 
 ```{r}
 student_mat_revised_3 <- student_mat_revised_2 %>% 
-mutate(alcohol = weekdayalc + weekendalc) %>% 
-  select(-weekdayalc, -weekendalc) %>% 
-  filter(school == "GP")
+  mutate(alcohol = weekdayalc + weekendalc)
+  View(student_mat_revised_3)
 ```
 
 ```{r}
-student_mat_revised_3 %>% 
+student_mat_revised_4 <- student_mat_revised_3 %>% 
+  filter(school == "GP")
+  View(student_mat_revised_4)
+```
+
+```{r}
+student_mat_revised_5 <- student_mat_revised_4 %>% 
+  select(-weekdayalc, -weekendalc)
+  View(student_mat_revised_5)
+```
+
+```{r}
+student_mat_revised_5 %>% 
   ggplot()+
   geom_bar(mapping = aes(x = sex, fill = sex))
 ```
 
-
 ```{r}
-library(plotly)
-fig <- student_mat_revised_3 %>% 
-  ggplot() +
-  geom_bar(mapping = aes(x = sex, fill = sex))
+gender <- student_mat_revised_5 %>% 
+  ggplot()+
+  geom_bar(mapping = aes(x=sex, fill = sex))
 
-ggplotly(fig)
-```
-
-```{r}
-a <- student_mat_revised_3 %>% 
-  ggplot() +
-  geom_smooth(mapping = aes(x = alcohol, y = grade), method = lm, se = FALSE, col = "blue", size = 3) +
-  
-  labs(
-    title = "relationship",
-    x = "alcohol",
-    y = "grade"
-  )
-ggplotly(a)
-```
-
-```{r}
-b <- student_mat_revised_3 %>% 
-  ggplot() +
-  geom_smooth(mapping = aes(x = alcohol, y = absences), method = lm, se = FALSE, col = "blue", size = 3) +
-  
-  labs(
-    title = "relationship",
-    x = "alcohol",
-    y = "absences"
-  )
-ggplotly(b)
-```
-
-```{r}
-c <- student_mat_revised_3 %>% 
-  ggplot() +
-  geom_smooth(mapping = aes(x = alcohol, y = studytime), method = lm, se = FALSE, col = "blue", size = 3) +
-  
-  labs(
-    title = "relationship",
-    x = "alcohol",
-    y = "absences"
-  )
-ggplotly(c)
-```
-
-```{r}
-d <- student_mat_revised_3 %>% 
-  ggplot() +
-  geom_smooth(mapping = aes(x = alcohol, y = failures), method = lm, se = FALSE, col = "blue", size = 3) +
-  labs(
-    title = "relationship",
-    x = "alcohol",
-    y = "failures"
-  )
-ggplotly(d)
+ggplotly(gender)
 ```
 
 
 
+```{r}
+alcohol_grade <- student_mat_revised_5 %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(x = alcohol, y = grade), method = lm, se = FALSE, size = 2, color = "blue")
+ggplotly(alcohol_grade)
+```
+
+```{r}
+alcohol_studytime <- student_mat_revised_5 %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(x = alcohol, y = studytime), method = lm, se = FALSE, size = 2, color = "blue")
+ggplotly(alcohol_studytime)
+```
