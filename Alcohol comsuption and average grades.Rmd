@@ -84,25 +84,29 @@ ggplotly(gender)
 ```{r}
 alcohol_grade <- student_mat_revised_5 %>% 
   ggplot()+
-  geom_smooth(mapping = aes(x = alcohol, y = grade), method = lm, se = FALSE, size = 2, color = "blue") +
+  geom_smooth(mapping = aes(x = alcohol, y = grade), method = lm, se = FALSE, size = 2, color = "purple") +
+  geom_point(mapping = aes(x = alcohol, y = grade, col = grade)) +
   
     labs(
     title = "The relationship between alcohol consumption and math grade",
     x = "Weekly alcohol consumption level",
     y = "Final math grade"
   )
+
 ggplotly(alcohol_grade)
 ```
 
 ```{r}
 alcohol_studytime <- student_mat_revised_5 %>% 
   ggplot()+
-  geom_smooth(mapping = aes(x = alcohol, y = studytime), method = lm, se = FALSE, size = 2, color = "blue") +
+  geom_smooth(mapping = aes(x = alcohol, y = studytime), method = lm, se = FALSE, size = 2, color = "purple") +
+  geom_point(mapping = aes(x = alcohol, y = studytime, col = studytime))+
+  
       labs(
     title = "The relationship between alcohol consumption and study time",
     x = "Weekly alcohol consumption level",
     y = "weekly study time"
-  )
+  ) 
+
 ggplotly(alcohol_studytime)
 ```
-
