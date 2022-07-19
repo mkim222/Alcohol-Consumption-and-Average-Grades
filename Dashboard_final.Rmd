@@ -1,0 +1,124 @@
+---
+title: "Minsoo's Flexdashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(tidyverse)
+library(plotly)
+library(leaflet)
+library(sp)
+library(flexdashboard)
+library(shiny)
+library(shinydashboard)
+```
+
+
+```{r}
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(tidyverse)
+```
+
+
+```{r}
+library(readr)
+student_mat <- read_csv("student-mat.csv")
+view(student_mat)
+```
+
+```{r}
+library(dplyr)
+student_mat_revised <- student_mat %>%
+  select(school, sex, age, studytime, failures, Dalc, Walc, absences, G3)
+  view(student_mat_revised)
+```
+
+```{r}
+student_mat_revised_2 <- student_mat_revised %>% 
+  rename(grade = "G3",
+         weekdayalc = "Dalc",
+         weekendalc = "Walc")
+  view(student_mat_revised_2)
+```
+
+```{r}
+student_mat_revised_3 <- student_mat_revised_2 %>% 
+  mutate(alcohol = weekdayalc + weekendalc)
+  view(student_mat_revised_3)
+```
+
+```{r}
+student_mat_revised_4 <- student_mat_revised_3 %>% 
+  filter(school == "GP")
+  view(student_mat_revised_4)
+```
+
+```{r}
+student_mat_revised_5 <- student_mat_revised_4 %>% 
+  select(-weekdayalc, -weekendalc)
+  view(student_mat_revised_5)
+```
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+```{r}
+gender <- student_mat_revised_5 %>% 
+  ggplot()+
+  geom_bar(mapping = aes(x=sex, fill = sex))+
+    labs(
+    title = "The number of GP students",
+    x = "Gender",
+    y = "The number of students"
+  )
+
+ggplotly(gender)
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+alcohol_grade <- student_mat_revised_5 %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(x = alcohol, y = grade), method = lm, se = FALSE, size = 2, color = "purple") +
+  geom_point(mapping = aes(x = alcohol, y = grade, col = grade)) +
+  
+    labs(
+    title = "The relationship between alcohol consumption and math grade",
+    x = "Weekly alcohol consumption level",
+    y = "Final math grade"
+  )
+
+ggplotly(alcohol_grade)
+```
+
+### Chart C
+
+```{r}
+alcohol_studytime <- student_mat_revised_5 %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(x = alcohol, y = studytime), method = lm, se = FALSE, size = 2, color = "purple") +
+  geom_point(mapping = aes(x = alcohol, y = studytime, col = studytime))+
+  
+      labs(
+    title = "The relationship between alcohol consumption and study time",
+    x = "Weekly alcohol consumption level",
+    y = "weekly study time"
+  ) 
+
+ggplotly(alcohol_studytime)
+```
+
